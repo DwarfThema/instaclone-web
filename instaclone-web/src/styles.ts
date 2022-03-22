@@ -3,9 +3,20 @@ import reset from "styled-reset";
 
 export const GlobalStyles = createGlobalStyle`
   ${reset}
-      body{
-          background-color: ${(p) => p.theme.bgColor}
+  input{
+    all:unset
+  }
+  *{
+    box-sizing: border-box;
+  }
+  body{
+          background-color: #fafafa;
+          font-size: 14px;
+          font-family: 'Noto Sans KR', sans-serif;;
       }
+  a{
+    text-decoration: none;
+  }
   `;
 
 export const lightTheme: DefaultTheme = {
