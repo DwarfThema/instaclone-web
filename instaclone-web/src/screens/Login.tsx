@@ -11,6 +11,7 @@ import Input from "../components/auth/Input";
 import FormBox from "../components/auth/FormBox";
 import BottomBox from "../components/auth/BottomBox";
 import routes from "../routes";
+import { useState } from "react";
 
 const FacebookLogin = styled.div`
   color: #40588a;
@@ -21,6 +22,14 @@ const FacebookLogin = styled.div`
 `;
 
 const Login = () => {
+  const [username, setUsername] = useState("");
+
+  const usernameChanger = (event: React.FormEvent<HTMLInputElement>) => {
+    const {
+      currentTarget: { value },
+    } = event;
+    setUsername(value);
+  };
   return (
     <AuthLayout>
       <FormBox>
@@ -28,7 +37,12 @@ const Login = () => {
           <FontAwesomeIcon icon={faInstagram} size="3x" />
         </div>
         <form>
-          <Input type="text" placeholder="아이디" />
+          <Input
+            onChange={usernameChanger}
+            value={username}
+            type="text"
+            placeholder="아이디"
+          />
           <Input type="text" placeholder="비밀번호" />
           <Button type="submit" value="로그인" />
         </form>
