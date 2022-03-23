@@ -12,7 +12,8 @@ import FormBox from "../components/auth/FormBox";
 import BottomBox from "../components/auth/BottomBox";
 import routes from "../routes";
 import PageTitle from "../components/PageTitle";
-import { useForm } from "react-hook-form";
+import { useForm, useFormState } from "react-hook-form";
+import FormError from "../components/auth/FormError";
 
 const FacebookLogin = styled.div`
   color: #40588a;
@@ -22,14 +23,19 @@ const FacebookLogin = styled.div`
   }
 `;
 
+interface IForm {
+  username: string;
+  password: string;
+  hasError: string;
+}
+
 const Login = () => {
-  const { register, handleSubmit } = useForm();
-  const onSubmitValid = (data: any) => {
-    console.log(data, "valid");
-  };
-  const onSubmitinValid = (data: any) => {
-    console.log(data, "invalid");
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm<IForm>({ mode: "onChange" });
+
   return (
     <AuthLayout>
       <PageTitle title="로그인" />
@@ -37,22 +43,25 @@ const Login = () => {
         <div>
           <FontAwesomeIcon icon={faInstagram} size="3x" />
         </div>
-        <form onSubmit={handleSubmit(onSubmitValid, onSubmitinValid)}>
+        <form>
           <Input
             {...register("username", {
               required: "아이디를 입력해 주세요.",
               minLength: { value: 5, message: "5글자 이상 입력해주세요." },
-              validate: (currentValue) => currentValue.includes("potato"),
             })}
             type="text"
             placeholder="아이디"
+            hasError={Boolean(errors?.username?.message)}
           />
+          <FormError message={errors?.username?.message} />
           <Input
             {...register("password", { required: "비밀번호를 입력해 주세요." })}
             type="password"
             placeholder="비밀번호"
+            hasError={Boolean(errors?.password?.message)}
           />
-          <Button type="submit" value="로그인" />
+          <FormError message={errors?.password?.message} />
+          <Button type="submit" value="로그인" disabled={!isValid} />
         </form>
         <Seperator />
         <FacebookLogin>
