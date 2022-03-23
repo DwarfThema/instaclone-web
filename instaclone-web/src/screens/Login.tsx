@@ -11,7 +11,8 @@ import Input from "../components/auth/Input";
 import FormBox from "../components/auth/FormBox";
 import BottomBox from "../components/auth/BottomBox";
 import routes from "../routes";
-import { useState } from "react";
+import PageTitle from "../components/PageTitle";
+import { useForm } from "react-hook-form";
 
 const FacebookLogin = styled.div`
   color: #40588a;
@@ -22,28 +23,35 @@ const FacebookLogin = styled.div`
 `;
 
 const Login = () => {
-  const [username, setUsername] = useState("");
-
-  const usernameChanger = (event: React.FormEvent<HTMLInputElement>) => {
-    const {
-      currentTarget: { value },
-    } = event;
-    setUsername(value);
+  const { register, handleSubmit } = useForm();
+  const onSubmitValid = (data: any) => {
+    console.log(data, "valid");
+  };
+  const onSubmitinValid = (data: any) => {
+    console.log(data, "invalid");
   };
   return (
     <AuthLayout>
+      <PageTitle title="로그인" />
       <FormBox>
         <div>
           <FontAwesomeIcon icon={faInstagram} size="3x" />
         </div>
-        <form>
+        <form onSubmit={handleSubmit(onSubmitValid, onSubmitinValid)}>
           <Input
-            onChange={usernameChanger}
-            value={username}
+            {...register("username", {
+              required: "아이디를 입력해 주세요.",
+              minLength: { value: 5, message: "5글자 이상 입력해주세요." },
+              validate: (currentValue) => currentValue.includes("potato"),
+            })}
             type="text"
             placeholder="아이디"
           />
-          <Input type="text" placeholder="비밀번호" />
+          <Input
+            {...register("password", { required: "비밀번호를 입력해 주세요." })}
+            type="password"
+            placeholder="비밀번호"
+          />
           <Button type="submit" value="로그인" />
         </form>
         <Seperator />
