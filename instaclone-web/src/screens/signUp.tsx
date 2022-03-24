@@ -62,21 +62,27 @@ const SignUp = () => {
     register,
     handleSubmit,
     setError,
+    getValues,
     formState: { errors, isValid, isDirty },
   } = useForm<IForm>({ mode: "onChange" });
 
   const navigate = useNavigate();
 
   const onCompleted = (data: any) => {
-    console.log(data);
-
     const {
       createAccount: { ok, error },
     } = data;
     if (!ok) {
       return setError("result", { message: error });
     }
-    navigate(routes.home);
+    const { userName, password } = getValues();
+    navigate(routes.home, {
+      state: {
+        message: "가입을 완료했습니다. 로그인 해주세요.",
+        userName,
+        password,
+      },
+    });
   };
 
   const [createAccount, { loading }] = useMutation(CREATE_ACCOUNT_MUTATION, {

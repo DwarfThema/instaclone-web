@@ -17,6 +17,7 @@ import FormError from "../components/auth/FormError";
 import { gql, useMutation } from "@apollo/client";
 import { log } from "console";
 import { logUserIn } from "../apollo";
+import { useLocation } from "react-router-dom";
 
 const FacebookLogin = styled.div`
   color: #40588a;
@@ -26,12 +27,10 @@ const FacebookLogin = styled.div`
   }
 `;
 
-interface IForm {
-  userName: string;
-  password: string;
-  hasError: string;
-  result: string;
-}
+const Notification = styled.div`
+  color: #3498db;
+  margin-top: 10px;
+`;
 
 const LOGIN_MUTATION = gql`
   mutation login($userName: String!, $password: String!) {
@@ -43,7 +42,25 @@ const LOGIN_MUTATION = gql`
   }
 `;
 
+interface IForm {
+  userName: string;
+  password: string;
+  hasError: string;
+  result: string;
+}
+
+interface IState {
+  message?: string;
+}
+
+interface ILocation {
+  state?: any;
+}
+
 const Login = () => {
+  const location: ILocation = useLocation();
+  const state: IState = location.state;
+
   const {
     register,
     handleSubmit,
@@ -51,7 +68,9 @@ const Login = () => {
     setError,
     clearErrors,
     formState: { errors, isValid, isDirty },
-  } = useForm<IForm>({ mode: "onChange" });
+  } = useForm<IForm>({
+    mode: "onChange",
+  });
 
   const onCompleted = (data: any) => {
     console.log(data);
@@ -86,6 +105,7 @@ const Login = () => {
         <div>
           <FontAwesomeIcon icon={faInstagram} size="3x" />
         </div>
+        <Notification>{state?.message}</Notification>
         <form onSubmit={handleSubmit(onSubmitValid)}>
           <Input
             {...register("userName", {
