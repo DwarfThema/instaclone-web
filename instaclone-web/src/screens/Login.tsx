@@ -14,6 +14,8 @@ import routes from "../routes";
 import PageTitle from "../components/PageTitle";
 import { useForm, useFormState } from "react-hook-form";
 import FormError from "../components/auth/FormError";
+import { gql, useMutation } from "@apollo/client";
+import { log } from "console";
 
 const FacebookLogin = styled.div`
   color: #40588a;
@@ -24,17 +26,52 @@ const FacebookLogin = styled.div`
 `;
 
 interface IForm {
-  username: string;
+  userName: string;
   password: string;
   hasError: string;
+  result: string;
 }
+
+const LOGIN_MUTATION = gql`
+  mutation login($userName: String!, $password: String!) {
+    login(userName: $userName, password: $password) {
+      ok
+      token
+      error
+    }
+  }
+`;
 
 const Login = () => {
   const {
     register,
     handleSubmit,
+    getValues,
+    setError,
     formState: { errors, isValid },
   } = useForm<IForm>({ mode: "onChange" });
+
+  const onCompleted = (data: any) => {
+    console.log(data);
+    const {
+      login: { ok, error, token },
+    } = data;
+    if (!ok) {
+      setError("result", { message: error });
+    }
+  };
+
+  const [login, { loading }] = useMutation(LOGIN_MUTATION, { onCompleted });
+
+  const onSubmitValid = (data: any) => {
+    if (loading) {
+      return;
+    }
+    const { userName, password } = getValues();
+    login({
+      variables: { userName, password },
+    });
+  };
 
   return (
     <AuthLayout>
@@ -43,17 +80,17 @@ const Login = () => {
         <div>
           <FontAwesomeIcon icon={faInstagram} size="3x" />
         </div>
-        <form>
+        <form onSubmit={handleSubmit(onSubmitValid)}>
           <Input
-            {...register("username", {
+            {...register("userName", {
               required: "아이디를 입력해 주세요.",
               minLength: { value: 5, message: "5글자 이상 입력해주세요." },
             })}
             type="text"
             placeholder="아이디"
-            hasError={Boolean(errors?.username?.message)}
+            hasError={Boolean(errors?.userName?.message)}
           />
-          <FormError message={errors?.username?.message} />
+          <FormError message={errors?.userName?.message} />
           <Input
             {...register("password", { required: "비밀번호를 입력해 주세요." })}
             type="password"
@@ -61,7 +98,12 @@ const Login = () => {
             hasError={Boolean(errors?.password?.message)}
           />
           <FormError message={errors?.password?.message} />
-          <Button type="submit" value="로그인" disabled={!isValid} />
+          <Button
+            type="submit"
+            value={loading ? "로그인 중입니다.." : "로그인"}
+            disabled={!isValid || loading}
+          />
+          <FormError message={errors?.result?.message} />
         </form>
         <Seperator />
         <FacebookLogin>
