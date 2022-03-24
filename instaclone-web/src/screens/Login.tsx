@@ -73,13 +73,11 @@ const Login = () => {
     if (loading) {
       return;
     }
-    const { userName, password } = getValues();
+    const { userName, password } = getValues(); //data 도 써도됨
     login({
       variables: { userName, password },
     });
   };
-
-  console.log(isValid);
 
   return (
     <AuthLayout>
