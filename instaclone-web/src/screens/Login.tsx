@@ -17,7 +17,8 @@ import FormError from "../components/auth/FormError";
 import { gql, useMutation } from "@apollo/client";
 import { log } from "console";
 import { logUserIn } from "../apollo";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import FormNotification from "../components/auth/FormNotification";
 
 const FacebookLogin = styled.div`
   color: #40588a;
@@ -25,11 +26,6 @@ const FacebookLogin = styled.div`
     margin-left: 10px;
     font-weight: 600;
   }
-`;
-
-const Notification = styled.div`
-  color: #3498db;
-  margin-top: 10px;
 `;
 
 const LOGIN_MUTATION = gql`
@@ -60,7 +56,7 @@ interface ILocation {
 const Login = () => {
   const location: ILocation = useLocation();
   const state: IState = location.state;
-
+  console.log(location);
   const {
     register,
     handleSubmit,
@@ -70,6 +66,10 @@ const Login = () => {
     formState: { errors, isValid, isDirty },
   } = useForm<IForm>({
     mode: "onChange",
+    defaultValues: {
+      userName: location?.state?.userName || "",
+      password: location?.state?.password || "",
+    },
   });
 
   const onCompleted = (data: any) => {
@@ -105,7 +105,7 @@ const Login = () => {
         <div>
           <FontAwesomeIcon icon={faInstagram} size="3x" />
         </div>
-        <Notification>{state?.message}</Notification>
+        <FormNotification message={state?.message} />
         <form onSubmit={handleSubmit(onSubmitValid)}>
           <Input
             {...register("userName", {
@@ -135,7 +135,7 @@ const Login = () => {
           <Button
             type="submit"
             value={loading ? "로그인 중입니다." : "로그인"}
-            disabled={!isValid || loading || !isDirty}
+            disabled={!isValid || loading}
           />
           <FormError message={errors?.result?.message} />
         </form>

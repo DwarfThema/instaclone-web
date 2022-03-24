@@ -82,6 +82,7 @@ const SignUp = () => {
         userName,
         password,
       },
+      replace: true,
     });
   };
 
