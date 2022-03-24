@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const BaseBox = styled.div`
-  background-color: white;
+  background-color: ${(p) => p.theme.bgColor};
   border: 1px solid ${(p) => p.theme.borderColor};
   width: 100%;
 `;

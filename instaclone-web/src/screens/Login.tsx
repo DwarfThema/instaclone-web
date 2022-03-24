@@ -73,8 +73,6 @@ const Login = () => {
   });
 
   const onCompleted = (data: any) => {
-    console.log(data);
-
     const {
       login: { ok, error, token },
     } = data;
