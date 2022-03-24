@@ -16,6 +16,7 @@ import { useForm, useFormState } from "react-hook-form";
 import FormError from "../components/auth/FormError";
 import { gql, useMutation } from "@apollo/client";
 import { log } from "console";
+import { logUserIn } from "../apollo";
 
 const FacebookLogin = styled.div`
   color: #40588a;
@@ -48,16 +49,21 @@ const Login = () => {
     handleSubmit,
     getValues,
     setError,
-    formState: { errors, isValid },
+    clearErrors,
+    formState: { errors, isValid, isDirty },
   } = useForm<IForm>({ mode: "onChange" });
 
   const onCompleted = (data: any) => {
     console.log(data);
+
     const {
       login: { ok, error, token },
     } = data;
     if (!ok) {
-      setError("result", { message: error });
+      return setError("result", { message: error });
+    }
+    if (token) {
+      logUserIn(token);
     }
   };
 
@@ -73,6 +79,8 @@ const Login = () => {
     });
   };
 
+  console.log(isValid);
+
   return (
     <AuthLayout>
       <PageTitle title="로그인" />
@@ -84,6 +92,9 @@ const Login = () => {
           <Input
             {...register("userName", {
               required: "아이디를 입력해 주세요.",
+              onChange() {
+                clearErrors("result");
+              },
               minLength: { value: 5, message: "5글자 이상 입력해주세요." },
             })}
             type="text"
@@ -92,7 +103,12 @@ const Login = () => {
           />
           <FormError message={errors?.userName?.message} />
           <Input
-            {...register("password", { required: "비밀번호를 입력해 주세요." })}
+            {...register("password", {
+              required: "비밀번호를 입력해 주세요.",
+              onChange() {
+                clearErrors("result");
+              },
+            })}
             type="password"
             placeholder="비밀번호"
             hasError={Boolean(errors?.password?.message)}
@@ -100,8 +116,8 @@ const Login = () => {
           <FormError message={errors?.password?.message} />
           <Button
             type="submit"
-            value={loading ? "로그인 중입니다.." : "로그인"}
-            disabled={!isValid || loading}
+            value={loading ? "로그인 중입니다." : "로그인"}
+            disabled={!isValid || loading || !isDirty}
           />
           <FormError message={errors?.result?.message} />
         </form>

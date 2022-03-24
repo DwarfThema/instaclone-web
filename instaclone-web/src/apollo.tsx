@@ -1,6 +1,17 @@
 import { ApolloClient, InMemoryCache, makeVar } from "@apollo/client";
 
-export const isLoggedInVar = makeVar(false);
+const TOKEN = "token";
+
+export const isLoggedInVar = makeVar(Boolean(localStorage.getItem(TOKEN)));
+export const logUserIn = (token: string) => {
+  localStorage.setItem(TOKEN, token);
+  isLoggedInVar(true);
+};
+export const logUserOut = () => {
+  localStorage.removeItem(TOKEN);
+  isLoggedInVar(false);
+};
+
 export const darkModeVar = makeVar(false);
 
 export const client = new ApolloClient({
