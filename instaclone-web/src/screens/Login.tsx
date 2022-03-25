@@ -12,10 +12,9 @@ import FormBox from "../components/auth/FormBox";
 import BottomBox from "../components/auth/BottomBox";
 import routes from "../routes";
 import PageTitle from "../components/PageTitle";
-import { useForm, useFormState } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import FormError from "../components/auth/FormError";
 import { gql, useMutation } from "@apollo/client";
-import { log } from "console";
 import { logUserIn } from "../apollo";
 import { useLocation, useNavigate } from "react-router-dom";
 import FormNotification from "../components/auth/FormNotification";
@@ -56,7 +55,6 @@ interface ILocation {
 const Login = () => {
   const location: ILocation = useLocation();
   const state: IState = location.state;
-  console.log(location);
   const {
     register,
     handleSubmit,
