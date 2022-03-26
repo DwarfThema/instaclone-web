@@ -4,4 +4,4 @@
 - [x] Authentication
 - [x] Architecture
 - [x] Styles
-- [ ] Login / Sign Up
+- [x] Login / Sign Up
