@@ -1,4 +1,3 @@
-import { any } from "prop-types";
 import styled from "styled-components";
 
 interface IProp {

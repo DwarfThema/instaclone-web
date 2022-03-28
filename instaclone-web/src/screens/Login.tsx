@@ -16,13 +16,9 @@ import { useForm } from "react-hook-form";
 import FormError from "../components/auth/FormError";
 import { gql, useMutation } from "@apollo/client";
 import { logUserIn } from "../apollo";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import FormNotification from "../components/auth/FormNotification";
-import {
-  LoginMutation,
-  LoginMutationFn,
-  LoginMutationVariables,
-} from "../generated/graphql";
+import { LoginMutation, LoginMutationVariables } from "../generated/graphql";
 
 const FacebookLogin = styled.div`
   color: #40588a;
@@ -66,7 +62,7 @@ const Login = () => {
     getValues,
     setError,
     clearErrors,
-    formState: { errors, isValid, isDirty },
+    formState: { errors, isValid },
   } = useForm<IForm>({
     mode: "onChange",
     defaultValues: {

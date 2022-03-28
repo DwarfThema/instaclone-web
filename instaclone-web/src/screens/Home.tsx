@@ -1,5 +1,5 @@
-import { useLocation, useNavigate } from "react-router-dom";
-import { isLoggedInVar, logUserOut } from "../apollo";
+import { useNavigate } from "react-router-dom";
+import { logUserOut } from "../apollo";
 import routes from "../routes";
 
 const Home = () => {
