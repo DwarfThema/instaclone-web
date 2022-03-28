@@ -14,10 +14,9 @@ const ME_QUERY = gql`
 
 function useUser() {
   const hasToken = useReactiveVar(isLoggedInVar);
-  const { data, error } = useQuery<MeQuery, MeQueryVariables>(ME_QUERY, {
+  const { data } = useQuery<MeQuery, MeQueryVariables>(ME_QUERY, {
     skip: !hasToken,
   });
-  console.log(data, error);
 
   useEffect(() => {
     if (data?.me === null) {

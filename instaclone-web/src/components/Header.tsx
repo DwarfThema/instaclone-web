@@ -47,6 +47,7 @@ const Button = styled.span`
 
 const IconsContainer = styled.div`
   display: flex;
+  align-items: center;
 `;
 
 const Header = () => {
