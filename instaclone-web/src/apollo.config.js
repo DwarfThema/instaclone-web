@@ -1,6 +1,6 @@
 module.exports = {
   client: {
-    includes: ["./src/**/*/.{tsx,ts"],
+    includes: ["./src/**/*/.{tsx,ts}"],
     tagName: "gql",
     service: {
       name: "instaclone-backend",

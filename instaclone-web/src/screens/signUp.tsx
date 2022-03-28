@@ -12,6 +12,10 @@ import { useForm } from "react-hook-form";
 import { gql, useMutation } from "@apollo/client";
 import routes from "../routes";
 import { useNavigate } from "react-router-dom";
+import {
+  CreateAccountMutation,
+  CreateAccountMutationVariables,
+} from "../generated/graphql";
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -86,7 +90,10 @@ const SignUp = () => {
     });
   };
 
-  const [createAccount, { loading }] = useMutation(CREATE_ACCOUNT_MUTATION, {
+  const [createAccount, { loading }] = useMutation<
+    CreateAccountMutation,
+    CreateAccountMutationVariables
+  >(CREATE_ACCOUNT_MUTATION, {
     onCompleted,
   });
 

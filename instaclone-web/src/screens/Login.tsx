@@ -18,6 +18,11 @@ import { gql, useMutation } from "@apollo/client";
 import { logUserIn } from "../apollo";
 import { useLocation, useNavigate } from "react-router-dom";
 import FormNotification from "../components/auth/FormNotification";
+import {
+  LoginMutation,
+  LoginMutationFn,
+  LoginMutationVariables,
+} from "../generated/graphql";
 
 const FacebookLogin = styled.div`
   color: #40588a;
@@ -82,7 +87,10 @@ const Login = () => {
     }
   };
 
-  const [login, { loading }] = useMutation(LOGIN_MUTATION, { onCompleted });
+  const [login, { loading }] = useMutation<
+    LoginMutation,
+    LoginMutationVariables
+  >(LOGIN_MUTATION, { onCompleted });
 
   const onSubmitValid = (data: any) => {
     if (loading) {
