@@ -76,15 +76,46 @@ const Likes = styled(FatText)`
   display: block;
 `;
 
+const Comments = styled.div`
+  margin-top: 15px;
+  display: block;
+`;
+const Comment = styled.div`
+  margin-top: 20px;
+`;
+const CommentCaption = styled.span`
+  margin-left: 10px;
+`;
+
+const CommentCount = styled.span`
+  opacity: 0.7;
+  margin: 10px 0;
+  display: block;
+  font-weight: 600;
+  font-size: 12px;
+`;
+
 interface IPhoto {
   id: number;
   user: any;
   file: string;
   isLiked: boolean;
   likes: number;
+  caption?: string;
+  comments?: string[];
+  commentNumber?: number;
 }
 
-const Photo = ({ id, user, file, isLiked, likes }: IPhoto) => {
+const Photo = ({
+  id,
+  user,
+  file,
+  isLiked,
+  likes,
+  caption,
+  comments,
+  commentNumber,
+}: IPhoto) => {
   const updateToggleLike = (cache: any, result: any) => {
     const {
       data: {
@@ -97,10 +128,12 @@ const Photo = ({ id, user, file, isLiked, likes }: IPhoto) => {
         fragment: gql`
           fragment BSName on Photo {
             isLiked
+            likes
           }
         `,
         data: {
           isLiked: !isLiked,
+          likes: isLiked ? likes - 1 : likes + 1,
         },
       });
     }
@@ -142,6 +175,15 @@ const Photo = ({ id, user, file, isLiked, likes }: IPhoto) => {
           </div>
         </PhotoActions>
         <Likes> {likes === 1 ? "1 좋아요" : `${likes} 좋아요들`} </Likes>
+        <Comments>
+          <Comment>
+            <FatText>{user.userName}</FatText>
+            <CommentCaption> {caption} </CommentCaption>
+          </Comment>
+          <CommentCount>
+            {commentNumber === 0 ? "" : `${commentNumber} 개의 댓글`}{" "}
+          </CommentCount>
+        </Comments>
       </PhotoData>
     </PhotoContainer>
   );
