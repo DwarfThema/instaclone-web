@@ -85,10 +85,31 @@ interface IPhoto {
 }
 
 const Photo = ({ id, user, file, isLiked, likes }: IPhoto) => {
+  const updateToggleLike = (cache: any, result: any) => {
+    const {
+      data: {
+        toggleLike: { ok },
+      },
+    } = result;
+    if (ok) {
+      cache.writeFragment({
+        id: `Photo:${id}`,
+        fragment: gql`
+          fragment BSName on Photo {
+            isLiked
+          }
+        `,
+        data: {
+          isLiked: !isLiked,
+        },
+      });
+    }
+  };
   const [toggleLikeMutation, { loading }] = useMutation(TOGGLE_LIKE_MUTATION, {
     variables: {
       id,
     },
+    update: updateToggleLike,
   });
   return (
     <PhotoContainer key={id}>

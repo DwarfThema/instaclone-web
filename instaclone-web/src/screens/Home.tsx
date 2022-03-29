@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { logUserOut } from "../apollo";
 import Photo from "../components/feed/photo";
+import PageTitle from "../components/PageTitle";
 import routes from "../routes";
 
 const FEED_QUERY = gql`
@@ -30,6 +31,7 @@ const Home = () => {
   const navigate = useNavigate();
   return (
     <div>
+      <PageTitle title="피드" />
       {data?.seeFeed?.map((photo: any) => (
         <Photo key={photo.id} {...photo}></Photo>
       ))}
