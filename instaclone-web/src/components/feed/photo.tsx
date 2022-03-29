@@ -15,6 +15,7 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import Avatar from "../Avatar";
 import { gql, useMutation } from "@apollo/client";
+import Comments from "./Comments";
 
 const TOGGLE_LIKE_MUTATION = gql`
   mutation toggleLike($id: Int!) {
@@ -76,25 +77,6 @@ const Likes = styled(FatText)`
   display: block;
 `;
 
-const Comments = styled.div`
-  margin-top: 15px;
-  display: block;
-`;
-const Comment = styled.div`
-  margin-top: 20px;
-`;
-const CommentCaption = styled.span`
-  margin-left: 10px;
-`;
-
-const CommentCount = styled.span`
-  opacity: 0.7;
-  margin: 10px 0;
-  display: block;
-  font-weight: 600;
-  font-size: 12px;
-`;
-
 interface IPhoto {
   id: number;
   user: any;
@@ -102,7 +84,7 @@ interface IPhoto {
   isLiked: boolean;
   likes: number;
   caption?: string;
-  comments?: string[];
+  comments?: any[];
   commentNumber?: number;
 }
 
@@ -113,8 +95,8 @@ const Photo = ({
   isLiked,
   likes,
   caption,
-  comments,
   commentNumber,
+  comments,
 }: IPhoto) => {
   const updateToggleLike = (cache: any, result: any) => {
     const {
@@ -175,15 +157,12 @@ const Photo = ({
           </div>
         </PhotoActions>
         <Likes> {likes === 1 ? "1 좋아요" : `${likes} 좋아요들`} </Likes>
-        <Comments>
-          <Comment>
-            <FatText>{user.userName}</FatText>
-            <CommentCaption> {caption} </CommentCaption>
-          </Comment>
-          <CommentCount>
-            {commentNumber === 0 ? "" : `${commentNumber} 개의 댓글`}{" "}
-          </CommentCount>
-        </Comments>
+        <Comments
+          author={user.userName}
+          caption={caption}
+          comments={comments}
+          commentNumber={commentNumber}
+        />
       </PhotoData>
     </PhotoContainer>
   );
