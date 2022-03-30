@@ -2,7 +2,7 @@ import { gql, useQuery } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { logUserOut } from "../apollo";
-import Photo from "../components/feed/photo";
+import Photo from "../components/feed/Photo";
 import PageTitle from "../components/PageTitle";
 import routes from "../routes";
 

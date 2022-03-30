@@ -105,17 +105,20 @@ const Photo = ({
       },
     } = result;
     if (ok) {
-      cache.writeFragment({
-        id: `Photo:${id}`,
-        fragment: gql`
-          fragment BSName on Photo {
-            isLiked
-            likes
-          }
-        `,
-        data: {
-          isLiked: !isLiked,
-          likes: isLiked ? likes - 1 : likes + 1,
+      const cachePhotoId = `Photo:${id}`;
+      cache.modify({
+        id: cachePhotoId,
+        fields: {
+          isLiked(prevIsLiked: boolean) {
+            return !prevIsLiked;
+          },
+          likes(prevLikes: number) {
+            if (isLiked) {
+              return prevLikes - 1;
+            } else {
+              return prevLikes + 1;
+            }
+          },
         },
       });
     }
