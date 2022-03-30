@@ -1,19 +1,18 @@
 import { gql, useMutation } from "@apollo/client";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
+import useUser from "../../hooks/useUser";
 import Comment from "./Comment";
 
 const CommentsComtainer = styled.div`
-  margin-top: 15px;
-  display: block;
+  margin-top: 20px;
 `;
 
 const CommentCount = styled.span`
-  opacity: 0.7;
-  margin: 10px 0;
-  display: block;
-  font-weight: 600;
-  font-size: 12px;
+  width: 100%;
+  &::placeholder {
+    font-size: 12px;
+  }
 `;
 
 const CREATE_COMMENT_MUTATION = gql`
@@ -21,7 +20,22 @@ const CREATE_COMMENT_MUTATION = gql`
     createComment(photoId: $photoId, payload: $payload) {
       ok
       error
+      id
     }
+  }
+`;
+
+const PostCommentContainer = styled.div`
+  margin-top: 10px;
+  padding-top: 15px;
+  padding-bottom: 10px;
+  border-top: 1px solid ${(props) => props.theme.borderColor};
+`;
+
+const PostCommentInput = styled.input`
+  width: 100%;
+  &::placeholder {
+    font-size: 12px;
   }
 `;
 
@@ -40,10 +54,63 @@ const Comments = ({
   commentNumber,
   comments,
 }: IComments) => {
+  const { data: userData }: any = useUser();
+  const { register, handleSubmit, setValue, getValues } = useForm();
+  const createCommentUpdata = (cache: any, result: any) => {
+    const { payload } = getValues();
+    setValue("payload", "");
+    const {
+      data: {
+        createComment: { ok, id },
+      },
+    } = result;
+    // 이제부터 변조해줘야 한다.
+    if (ok && userData.me) {
+      const newComment = {
+        __typename: "Comment",
+        id,
+        user: {
+          ...userData.me,
+        },
+        payload,
+        isMine: true,
+        createdAt: Date.now() + "",
+      };
+      const newCacheComment = cache.writeFragment({
+        data: newComment,
+        fragment: gql`
+          fragment DwarfName on Comment {
+            id
+            user {
+              userName
+              avatar
+            }
+            payload
+            isMine
+            createdAt
+          }
+        `,
+      });
+
+      cache.modify({
+        id: `Photo:${photoId}`,
+        fields: {
+          comments(prev: any) {
+            return [...prev, newCacheComment];
+          },
+          commentNumber(prev: any) {
+            return prev + 1;
+          },
+        },
+      });
+    }
+  };
   const [createCommentMutation, { loading }] = useMutation(
-    CREATE_COMMENT_MUTATION
+    CREATE_COMMENT_MUTATION,
+    {
+      update: createCommentUpdata,
+    }
   );
-  const { register, handleSubmit, setValue } = useForm();
   const onValid = (data: any) => {
     const { payload } = data;
     if (loading) {
@@ -55,7 +122,6 @@ const Comments = ({
         payload,
       },
     });
-    setValue("payload", "");
   };
   return (
     <CommentsComtainer>
@@ -66,19 +132,22 @@ const Comments = ({
       {comments?.map((comment) => (
         <Comment
           key={comment.id}
+          id={comment.id}
+          photoId={photoId}
           author={comment.user.userName}
           payload={comment.payload}
+          isMine={comment.isMine}
         />
       ))}
-      <div>
+      <PostCommentContainer>
         <form onSubmit={handleSubmit(onValid)}>
-          <input
+          <PostCommentInput
             {...register("payload", { required: true })}
             type="text"
-            placeholder="코멘트를 입력하세요..."
+            placeholder="댓글을 입력하세요..."
           />
         </form>
-      </div>
+      </PostCommentContainer>
     </CommentsComtainer>
   );
 };
