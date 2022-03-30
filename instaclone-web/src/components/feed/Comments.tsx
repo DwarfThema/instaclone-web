@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { FatText } from "../shared";
 import Comment from "./Comment";
 
 const CommentsComtainer = styled.div`
