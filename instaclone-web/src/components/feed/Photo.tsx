@@ -161,6 +161,7 @@ const Photo = ({
         </PhotoActions>
         <Likes> {likes === 1 ? "1 좋아요" : `${likes} 좋아요들`} </Likes>
         <Comments
+          photoId={id}
           author={user.userName}
           caption={caption}
           comments={comments}
