@@ -6,6 +6,7 @@ import { MeQuery, MeQueryVariables } from "../generated/graphql";
 const ME_QUERY = gql`
   query me {
     me {
+      id
       userName
       avatar
     }
