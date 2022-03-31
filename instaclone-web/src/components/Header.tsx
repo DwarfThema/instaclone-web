@@ -70,11 +70,13 @@ const Header = () => {
                   <FontAwesomeIcon icon={faCompass} size="lg" />
                 </Icon>
                 <Icon>
-                  {data?.me?.avatar ? (
-                    <Avatar url={data?.me?.avatar} />
-                  ) : (
-                    <FontAwesomeIcon icon={faUser} size="lg" />
-                  )}
+                  <Link to={`/users/${data?.me?.userName}`}>
+                    {data?.me?.avatar ? (
+                      <Avatar url={data?.me?.avatar} />
+                    ) : (
+                      <FontAwesomeIcon icon={faUser} size="lg" />
+                    )}
+                  </Link>
                 </Icon>
               </IconsContainer>
             </>

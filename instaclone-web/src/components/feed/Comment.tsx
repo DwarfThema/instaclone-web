@@ -69,14 +69,16 @@ const Comment = ({ id, photoId, author, payload, isMine }: IComments) => {
   };
   return (
     <CommentContainer>
-      <FatText>{author}</FatText>
+      <Link to={`/user/${author}`}>
+        <FatText>{author}</FatText>
+      </Link>
       <CommentCaption>
         {payload?.split(" ").map((word: string, index: number) =>
-          /#[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|\w]+/g.test(word) ? (
+          /^#[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|\w]+/g.test(word) ? (
             <Link key={index} to={`/hashtags/${word.replace("#", "")}`}>
               {word}{" "}
             </Link>
-          ) : /@[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|\w]+/g.test(word) ? (
+          ) : /^@[ㄱ-ㅎ|ㅏ-ㅣ|가-힣|\w]+/g.test(word) ? (
             <Link key={index} to={`/users/${word.replace("@", "")}`}>
               {word}{" "}
             </Link>
