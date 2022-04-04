@@ -1,11 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
-import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import { logUserOut } from "../apollo";
 import Photo from "../components/feed/Photo";
 import PageTitle from "../components/PageTitle";
 import { COMMENT_FRAGMENT, PHOTO_FRAGMENT } from "../fragments";
-import routes from "../routes";
 
 const FEED_QUERY = gql`
   query seeFeed {
@@ -29,6 +25,7 @@ const FEED_QUERY = gql`
 
 const Home = () => {
   const { data } = useQuery(FEED_QUERY);
+
   return (
     <div>
       <PageTitle title="피드" />

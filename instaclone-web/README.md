@@ -5,5 +5,3 @@
 - [x] Architecture
 - [x] Styles
 - [x] Login / Sign Up
-
--[ㅌ]

@@ -64,7 +64,9 @@ const Header = () => {
             <>
               <IconsContainer>
                 <Icon>
-                  <FontAwesomeIcon icon={faHomeAlt} size="lg" />
+                  <Link to={routes.home}>
+                    <FontAwesomeIcon icon={faHomeAlt} size="lg" />
+                  </Link>
                 </Icon>
                 <Icon>
                   <FontAwesomeIcon icon={faCompass} size="lg" />
