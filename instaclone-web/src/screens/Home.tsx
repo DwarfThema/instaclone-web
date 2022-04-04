@@ -1,4 +1,5 @@
 import { gql, useQuery } from "@apollo/client";
+import styled from "styled-components";
 import Photo from "../components/feed/Photo";
 import PageTitle from "../components/PageTitle";
 import { COMMENT_FRAGMENT, PHOTO_FRAGMENT } from "../fragments";

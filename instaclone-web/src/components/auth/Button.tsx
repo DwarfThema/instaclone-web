@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 const Button = styled.input`
   border: none;
+  border-radius: 5px;
   margin-top: 12px;
   background-color: ${(p) => p.theme.accent};
   color: white;

@@ -3,8 +3,26 @@ import { faComment, faHeart } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
+import Button from "../components/auth/Button";
+import PageTitle from "../components/PageTitle";
 import { FatText } from "../components/shared";
 import { PHOTO_FRAGMENT } from "../fragments";
+
+const FOLLOW_USER_MUTATION = gql`
+  mutation followUser($userName: String!) {
+    followUser(userName: $userName) {
+      ok
+    }
+  }
+`;
+
+const UNFOLLOW_USER_MUTATION = gql`
+  mutation unfollowUser($userName: String!) {
+    unfollowUser(userName: $userName) {
+      ok
+    }
+  }
+`;
 
 const SEE_PROFILE_QUERY = gql`
   query seeProfile($userName: String!) {
@@ -50,6 +68,9 @@ const Username = styled.h3`
 const Row = styled.div`
   margin-bottom: 20px;
   font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 const List = styled.ul`
   display: flex;
@@ -104,21 +125,42 @@ const Icon = styled.span`
   }
 `;
 
+const ProfileBtn = styled(Button).attrs({
+  as: "span",
+})`
+  margin-top: 0;
+  margin-left: 15px;
+  width: 150px;
+`;
+
 const Profile = () => {
   const { userName } = useParams();
-  const { data } = useQuery(SEE_PROFILE_QUERY, {
+  const { data, loading } = useQuery(SEE_PROFILE_QUERY, {
     variables: {
       userName,
     },
   });
+  const getButton = (seeProfile: any) => {
+    const { isMe, isFollowing } = seeProfile;
+    if (isMe) {
+      return <ProfileBtn>Edit Profile</ProfileBtn>;
+    }
+    if (isFollowing) {
+      return <ProfileBtn>UnFollow</ProfileBtn>;
+    } else {
+      return <ProfileBtn>Follow</ProfileBtn>;
+    }
+  };
 
   return (
     <div>
+      <PageTitle title={loading ? "누군가" : `${userName} 님의 프로필`} />
       <Header>
         <Avatar src={data?.seeProfile?.avatar} />
         <Column>
           <Row>
             <Username>{data?.seeProfile?.userName}</Username>
+            {data?.seeProfile ? getButton(data.seeProfile) : null}
           </Row>
           <Row>
             <List>
