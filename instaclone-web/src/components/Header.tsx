@@ -72,7 +72,7 @@ const Header = () => {
                   <FontAwesomeIcon icon={faCompass} size="lg" />
                 </Icon>
                 <Icon>
-                  <Link to={`/users/${data?.me?.userName}`}>
+                  <Link to={`/user/${data?.me?.userName}`}>
                     {data?.me?.avatar ? (
                       <Avatar url={data?.me?.avatar} />
                     ) : (

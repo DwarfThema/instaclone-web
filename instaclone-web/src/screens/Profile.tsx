@@ -7,6 +7,7 @@ import Button from "../components/auth/Button";
 import PageTitle from "../components/PageTitle";
 import { FatText } from "../components/shared";
 import { PHOTO_FRAGMENT } from "../fragments";
+import useUser from "../hooks/useUser";
 
 const FOLLOW_USER_MUTATION = gql`
   mutation followUser($userName: String!) {
@@ -146,6 +147,8 @@ const Profile = () => {
     },
   });
 
+  const { data: userData }: any = useUser();
+
   const unfollowUserUpdata = (cache: any, result: any) => {
     const {
       data: {
@@ -163,6 +166,16 @@ const Profile = () => {
           return false;
         },
         totalFollowers(prev: number) {
+          return prev - 1;
+        },
+      },
+    });
+
+    const { me } = userData;
+    cache.modify({
+      id: `User:${me.userName}`,
+      fields: {
+        totalFollowing(prev: number) {
           return prev - 1;
         },
       },
@@ -192,6 +205,17 @@ const Profile = () => {
           return true;
         },
         totalFollowers(prev: number) {
+          return prev + 1;
+        },
+      },
+    });
+
+    const { me } = userData;
+
+    cache.modify({
+      id: `User:${me.userName}`,
+      fields: {
+        totalFollowing(prev: number) {
           return prev + 1;
         },
       },
