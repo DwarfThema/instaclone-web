@@ -1,4 +1,4 @@
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { gql, useApolloClient, useMutation, useQuery } from "@apollo/client";
 import { faComment, faHeart } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useParams } from "react-router-dom";
@@ -146,43 +146,73 @@ const Profile = () => {
     },
   });
 
+  const unfollowUserUpdata = (cache: any, result: any) => {
+    const {
+      data: {
+        unfollowUser: { ok },
+      },
+    } = result;
+    if (!ok) {
+      return;
+    }
+
+    cache.modify({
+      id: `User:${userName}`,
+      fields: {
+        isFollowing(prev: boolean) {
+          return false;
+        },
+        totalFollowers(prev: number) {
+          return prev - 1;
+        },
+      },
+    });
+  };
   const [unfollowUser] = useMutation(UNFOLLOW_USER_MUTATION, {
     variables: {
       userName,
     },
-    refetchQueries: [
-      {
-        query: SEE_PROFILE_QUERY,
-        variables: {
-          userName,
-        },
-      },
-    ],
+    update: unfollowUserUpdata,
   });
 
+  const client = useApolloClient();
+
+  const followUserCompleted = (data: any) => {
+    const {
+      followUser: { ok },
+    } = data;
+    if (!ok) {
+      return;
+    }
+    const { cache } = client;
+    cache.modify({
+      id: `User:${userName}`,
+      fields: {
+        isFollowing(prev: boolean) {
+          return true;
+        },
+        totalFollowers(prev: number) {
+          return prev + 1;
+        },
+      },
+    });
+  };
   const [followUser] = useMutation(FOLLOW_USER_MUTATION, {
     variables: {
       userName,
     },
-    refetchQueries: [
-      {
-        query: SEE_PROFILE_QUERY,
-        variables: {
-          userName,
-        },
-      },
-    ],
+    onCompleted: followUserCompleted,
   });
 
   const getButton = (seeProfile: any) => {
     const { isMe, isFollowing } = seeProfile;
     if (isMe) {
-      return <ProfileBtn onClick={unfollowUser}>Edit Profile</ProfileBtn>;
+      return <ProfileBtn onClick={unfollowUser}>프로파일 편집</ProfileBtn>;
     }
     if (isFollowing) {
-      return <ProfileBtn onClick={unfollowUser}>UnFollow</ProfileBtn>;
+      return <ProfileBtn onClick={unfollowUser}>언팔로우</ProfileBtn>;
     } else {
-      return <ProfileBtn onClick={followUser}>Follow</ProfileBtn>;
+      return <ProfileBtn onClick={followUser}>팔로우</ProfileBtn>;
     }
   };
 
