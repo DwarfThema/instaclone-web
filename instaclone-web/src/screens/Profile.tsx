@@ -231,7 +231,7 @@ const Profile = () => {
   const getButton = (seeProfile: any) => {
     const { isMe, isFollowing } = seeProfile;
     if (isMe) {
-      return <ProfileBtn onClick={unfollowUser}>프로파일 편집</ProfileBtn>;
+      return <ProfileBtn onClick={unfollowUser}>프로필 편집</ProfileBtn>;
     }
     if (isFollowing) {
       return <ProfileBtn onClick={unfollowUser}>언팔로우</ProfileBtn>;
