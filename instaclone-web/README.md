@@ -7,3 +7,4 @@
 - [x] Login / Sign Up
 
 - [x] netfilfy setting
+- [x] change git origin
