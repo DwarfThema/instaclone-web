@@ -5,3 +5,5 @@
 - [x] Architecture
 - [x] Styles
 - [x] Login / Sign Up
+
+- [x] netfilfy setting
